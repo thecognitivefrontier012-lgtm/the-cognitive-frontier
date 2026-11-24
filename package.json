@@ -1,0 +1,19 @@
+{
+  "name": "the-cognitive-frontier",
+  "version": "1.0.0",
+  "description": "Trợ lý AI Học tập SGK tích hợp RAG và Thuật toán lặp lại ngắt quãng SM-2 (Dự án KHKT)",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx live-server --port=5500"
+  },
+  "keywords": [
+    "Gemini AI",
+    "RAG",
+    "SM-2",
+    "EdTech",
+    "KHKT"
+  ],
+  "author": "Học sinh KHKT",
+  "license": "MIT"
+}

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE COGNITIVE FRONTIER — Trợ lý AI Học tập SGK (Dự án KHKT)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <!-- Thư viện đọc PDF trực tiếp trên trình duyệt -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+  <!-- TOP STATUS BAR -->
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <span class="dot-status"></span>
+      <span>KHKT EDITION // TIẾNG ANH & LỊCH SỬ</span>
+      <span class="divider">|</span>
+      <span>TÍNH CÁCH: <strong id="current-persona-label">GIA SƯ TẬN TÂM</strong></span>
+    </div>
+    <div class="top-bar-right">
+      <span class="api-badge" id="api-status-badge">● Gemini (gemini-2.5-flash)</span>
+    </div>
+  </header>
+
+  <!-- MAIN NAVIGATION -->
+  <nav class="navbar">
+    <div class="brand" onclick="switchTab('overview')">
+      <div class="brand-logo">◎</div>
+      <div>
+        <div class="brand-title">THE COGNITIVE FRONTIER</div>
+        <div class="brand-sub">GEMINI AI • RAG SGK</div>
+      </div>
+    </div>
+
+    <div class="nav-pills">
+      <button class="nav-btn active" data-tab="overview" onclick="switchTab('overview')">⊞ TỔNG QUAN</button>
+      <button class="nav-btn" data-tab="tutor" onclick="switchTab('tutor')">🤖 GIA SƯ AI</button>
+      <button class="nav-btn" data-tab="library" onclick="switchTab('library')">📚 KHO SGK <span class="badge" id="nav-doc-count">2</span></button>
+      <button class="nav-btn" data-tab="flashcards" onclick="switchTab('flashcards')">🗂️ FLASHCARDS <span class="badge" id="nav-card-count">3</span></button>
+      <button class="nav-btn" data-tab="settings" onclick="switchTab('settings')">⚙️ CÁ NHÂN HÓA</button>
+    </div>
+
+    <div class="user-stats-mini">
+      <span class="stat-chip streak">🔥 <b id="mini-streak">1</b> NGÀY</span>
+      <span class="stat-chip xp">⚡ <b id="mini-xp">70</b> XP</span>
+      <span class="stat-chip user">HỌ Học sinh KHKT</span>
+    </div>
+  </nav>
+
+  <!-- SM-2 REMINDER BANNER -->
+  <div class="sm2-banner" id="sm2-banner">
+    <div>
+      🔔 <strong>Nhắc nhở ôn tập SM-2:</strong> Bạn có <strong id="banner-due-count">3</strong> thẻ Flashcard cần ôn tập hôm nay để duy trì trí nhớ dài hạn!
+    </div>
+    <button class="btn-dark-sm" onclick="switchTab('flashcards')">ÔN TẬP NGAY (+XP) →</button>
+  </div>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="container">
+    
+    <!-- TAB 1: TỔNG QUAN -->
+    <section id="tab-overview" class="tab-section active">
+      <div class="hero-card">
+        <span class="pill-tag">✨ CHÀO MỪNG TRỞ LẠI, HỌC SINH KHKT!</span>
+        <h1>KHÔNG GIAN HỌC TẬP THÔNG MINH <span class="text-teal">TIẾNG ANH</span> & <span class="text-coral">LỊCH SỬ</span></h1>
+        <p class="hero-desc">
+          Hệ thống kết hợp mô hình ngôn ngữ lớn <strong>Gemini AI</strong> với kho dữ liệu <strong>Sách giáo khoa chính thống (PDF / Google Drive)</strong> và thuật toán lặp lại ngắt quãng <strong>SM-2</strong> giúp bạn hiểu sâu bản chất và ghi nhớ bền vững.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-primary blue" onclick="startSubjectChat('Tiếng Anh')">🌐 HỌC MÔN TIẾNG ANH NGAY</button>
+          <button class="btn-primary coral" onclick="startSubjectChat('Lịch Sử')">🏛️ HỌC MÔN LỊCH SỬ NGAY</button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box yellow">
+          <span class="stat-label">CHUỖI STREAK</span>
+          <div class="stat-val"><span id="stat-streak">1</span> <small>ngày 🔥</small></div>
+        </div>
+        <div class="stat-box purple">
+          <span class="stat-label">ĐIỂM XP & CẤP</span>
+          <div class="stat-val"><span id="stat-xp">70</span> <small id="stat-level">Lv.1</small></div>
+        </div>
+        <div class="stat-box green">
+          <span class="stat-label">NGUỒN SGK RAG</span>
+          <div class="stat-val"><span id="stat-docs">2</span> <small>tài liệu</small></div>
+        </div>
+        <div class="stat-box orange">
+          <span class="stat-label">CẦN ÔN HÔM NAY</span>
+          <div class="stat-val"><span id="stat-due">3</span> <small>thẻ</small></div>
+        </div>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card" onclick="switchTab('tutor')">
+          <h3>1. GIA SƯ GEMINI AI</h3>
+          <p>Hỏi đáp thông minh bám sát SGK Tiếng Anh & Lịch Sử, kèm gợi ý Prompt và nút lưu Flashcard 1 chạm.</p>
+          <span class="card-link">Mở khung chat →</span>
+        </div>
+        <div class="feature-card" onclick="switchTab('library')">
+          <h3>2. KHO SGK (PDF / DRIVE)</h3>
+          <p>Tải lên file PDF Sách giáo khoa hoặc dán link Google Drive chính thống làm cơ sở tri thức RAG cho AI.</p>
+          <span class="card-link">Quản lý nguồn dữ liệu →</span>
+        </div>
+        <div class="feature-card" onclick="switchTab('flashcards')">
+          <h3>3. FLASHCARD SM-2</h3>
+          <p>Tạo thẻ thủ công, tự động bằng AI hoặc từ chat; ôn tập theo thuật toán lặp lại ngắt quãng SM-2.</p>
+          <span class="card-link">Bắt đầu ôn tập →</span>
+        </div>
+        <div class="feature-card" onclick="switchTab('settings')">
+          <h3>4. CÁ NHÂN HÓA AI</h3>
+          <p>Chuyển đổi giọng điệu AI (Thầy giáo nghiêm khắc, Bạn học vui tính, Gia sư tận tâm) & nhập API Key.</p>
+          <span class="card-link">Tùy chỉnh AI →</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: GIA SƯ AI -->
+    <section id="tab-tutor" class="tab-section">
+      <div class="chat-layout">
+        <div class="chat-header">
+          <div>
+            <h2>🤖 GIA SƯ GEMINI AI (RAG SGK)</h2>
+            <small>Đang đối chiếu với <b id="chat-doc-ref">2 tài liệu SGK</b> trong kho dữ liệu</small>
+          </div>
+          <select id="subject-select" class="brutal-select">
+            <option value="Tiếng Anh">Môn: Tiếng Anh</option>
+            <option value="Lịch Sử">Môn: Lịch Sử</option>
+          </select>
+        </div>
+
+        <div class="quick-prompts">
+          <button onclick="fillPrompt('Giải thích ngữ pháp Câu điều kiện loại 2 trong SGK Tiếng Anh kèm ví dụ')">💡 Câu điều kiện loại 2</button>
+          <button onclick="fillPrompt('Tóm tắt nguyên nhân và ý nghĩa Chiến thắng Điện Biên Phủ 1954 theo SGK Lịch Sử')">🏛️ Điện Biên Phủ 1954</button>
+          <button onclick="fillPrompt('Tạo 3 câu hỏi trắc nghiệm ôn tập từ tài liệu SGK hiện có')">📝 Tạo đề trắc nghiệm</button>
+        </div>
+
+        <div class="chat-box" id="chat-box">
+          <div class="msg ai">
+            <div class="msg-bubble">
+              Chào bạn! Mình là <strong>Gia sư AI</strong>. Hãy đặt câu hỏi về bài học <b>Tiếng Anh</b> hoặc <b>Lịch Sử</b>, mình sẽ trích xuất kiến thức từ Kho SGK để giải thích dễ hiểu nhất cho bạn!
+            </div>
+          </div>
+        </div>
+
+        <form class="chat-input-area" onsubmit="handleSendMessage(event)">
+          <input type="text" id="chat-input" placeholder="Nhập câu hỏi bài học SGK của bạn..." required />
+          <button type="submit" class="btn-primary blue">GỬI CÂU HỎI ➤</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 3: KHO SGK (RAG) -->
+    <section id="tab-library" class="tab-section">
+      <div class="panel-card">
+        <h2>📚 KHO DỮ LIỆU SÁCH GIÁO KHOA (RAG KNOWLEDGE BASE)</h2>
+        <p>Tải lên file PDF Sách giáo khoa hoặc thêm nội dung bài học để AI trích xuất làm căn cứ trả lời chính xác.</p>
+        
+        <div class="upload-grid">
+          <div class="upload-box">
+            <h4>1. Tải lên File PDF SGK</h4>
+            <input type="file" id="pdf-upload" accept=".pdf" onchange="handlePDFUpload(event)" />
+            <small>Hệ thống tự động trích xuất văn bản PDF trực tiếp trên trình duyệt.</small>
+          </div>
+          <div class="upload-box">
+            <h4>2. Thêm nhanh bài học / Link Drive</h4>
+            <input type="text" id="doc-title" placeholder="Tên bài học (VD: Lịch sử 12 - Bài 1)" class="brutal-input" />
+            <textarea id="doc-content" rows="3" placeholder="Dán nội dung tóm tắt SGK hoặc ghi chú từ Google Drive..." class="brutal-input"></textarea>
+            <button class="btn-primary green" onclick="addManualDoc()">+ LƯU VÀO KHO RAG</button>
+          </div>
+        </div>
+
+        <h3>Danh sách tài liệu đang kích hoạt:</h3>
+        <div id="doc-list" class="doc-list"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: FLASHCARD SM-2 -->
+    <section id="tab-flashcards" class="tab-section">
+      <div class="panel-card">
+        <div class="fc-header">
+          <div>
+            <h2>🗂️ ÔN TẬP THÔNG MINH THUẬT TOÁN SM-2</h2>
+            <p>Đánh giá mức độ ghi nhớ để hệ thống tính toán ngày ôn tập tiếp theo tối ưu nhất.</p>
+          </div>
+          <button class="btn-primary coral" onclick="toggleAddCardForm()">+ TẠO THẺ MỚI</button>
+        </div>
+
+        <div id="add-card-form" class="add-card-box hidden">
+          <input type="text" id="fc-front" placeholder="Mặt trước (Câu hỏi / Từ vựng / Sự kiện)" class="brutal-input" />
+          <input type="text" id="fc-back" placeholder="Mặt sau (Định nghĩa / Diễn biến / Ý nghĩa)" class="brutal-input" />
+          <button class="btn-primary blue" onclick="createFlashcard()">LƯU THẺ FLASHCARD</button>
+        </div>
+
+        <div class="flashcard-stage" id="flashcard-stage">
+          <!-- Thẻ SM-2 sẽ được render tại đây -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: CÁ NHÂN HÓA & API KEY -->
+    <section id="tab-settings" class="tab-section">
+      <div class="panel-card">
+        <h2>⚙️ CẤU HÌNH GEMINI API & CÁ NHÂN HÓA GIA SƯ</h2>
+        
+        <div class="setting-group">
+          <label><strong>1. Gemini API Key (Google AI Studio):</strong></label>
+          <p class="hint">Nhập API Key thật để kết nối trực tiếp mô hình Gemini. Nếu để trống, hệ thống chạy ở chế độ Demo Offline thông minh.</p>
+          <div class="api-row">
+            <input type="password" id="gemini-api-key" placeholder="AIzaSy..." class="brutal-input" />
+            <button class="btn-primary green" onclick="saveSettings()">LƯU CẤU HÌNH</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label><strong>2. Chọn tính cách Gia sư AI:</strong></label>
+          <div class="persona-grid">
+            <div class="persona-card active" onclick="selectPersona('GIA SƯ TẬN TÂM', this)">
+              <h4>💖 Gia sư tận tâm</h4>
+              <p>Giải thích chi tiết, từng bước, luôn khích lệ tinh thần học tập.</p>
+            </div>
+            <div class="persona-card" onclick="selectPersona('THẦY GIÁO NGHIÊM KHẮC', this)">
+              <h4>📐 Thầy giáo nghiêm khắc</h4>
+              <p>Ngắn gọn, chuẩn xác từng thuật ngữ SGK, yêu cầu kỷ luật cao.</p>
+            </div>
+            <div class="persona-card" onclick="selectPersona('BẠN HỌC VUI TÍNH', this)">
+              <h4>🎧 Bạn học vui tính</h4>
+              <p>Trẻ trung, dùng ví dụ thực tế hài hước giúp dễ thuộc bài.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
