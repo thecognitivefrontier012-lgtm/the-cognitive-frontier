@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: the-cognitive-frontier123
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
