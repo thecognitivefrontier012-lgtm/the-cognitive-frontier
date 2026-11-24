@@ -27,7 +27,7 @@ let state = {
   xp: Number(localStorage.getItem('cf_xp')) || 70,
   streak: Number(localStorage.getItem('cf_streak')) || 1,
   persona: localStorage.getItem('cf_persona') || 'GIA SƯ TẬN TÂM',
-  apiKey: localStorage.getItem('cf_apikey') || '',
+  apiKey: localStorage.getItem('cf_apikey') || 'apiKey: localStorage.getItem('cf_apikey') || 'AIzaSyD-MÃ_KEY_CỦA_BẠN_Ở_ĐÂY'',
   docs: JSON.parse(localStorage.getItem('cf_docs')) || DEFAULT_DOCS,
   cards: JSON.parse(localStorage.getItem('cf_cards')) || DEFAULT_CARDS
 };
